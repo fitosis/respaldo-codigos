@@ -1,0 +1,159 @@
+<!--Con este traigo varios, ya que tiene un for-->
+<script>
+function getPost(url, tags, limit, elem){
+     var finalURL = url + '?tags=' + tags + '&limit=' + limit;
+     $.ajax({
+          url: finalURL,
+          cache: true,
+          success: function(data){
+               var content = data.posts;
+               var contentArr = [];
+                    
+
+                    $.each(content, function(i, v){ //este es el for, para traer mas que un solo contenido
+                        var template = "";
+                        template += '<li class="item">';
+                            template += '<div class="information-fluid">';
+                                template += '<div class="information-detail">';
+                                    template += '<h3>';
+                                        template += '<a href="'+ v.url +'">' + v.title + '</a>'
+                                    template += '</h3>'
+                                    //template += '<small> ' + v.created_at + ' </small>';
+                                template += '</div>';
+                            template += '</div>';
+                        template += '</li>';
+                        contentArr.push(template);
+                    })
+                    
+               $(elem).append(contentArr);
+          },
+          error: function(err){
+               $(elem).append(err);
+          }
+     })
+}
+$(document).ready(function(){
+        getPost('https://www.tbanc.cl/personas/promociones/posts.json','','10','#promoList');
+})
+</script>
+
+
+
+<!--Con este traigo solo uno, ya que no esta el for-->
+<script>
+function getPost(url, tags, limit, elem){
+     var finalURL = url + '?tags=' + tags + '&limit=' + limit;
+     $.ajax({
+          url: finalURL,
+          cache: true,
+          success: function(data){
+               var content = data.posts;
+               var contentArr = [];
+                   //console.log("ver: " + content[0].url);
+                   //console.log("ver: " + content[0].covers[0]);
+                    var template = "";
+                    template += '<a target="_blank" href="'+ content[0].url +'">';
+                    template += '<img src="'+ content[0].covers[0].replace("R320x240", "original") +'">';
+                    template += '<h4>' + content[0].title + '</h4>';
+                    template += '</a>';
+                    contentArr.push(template);
+               $(elem).append(contentArr);
+          },
+          error: function(err){
+               $(elem).append(err);
+          }
+     })
+}
+$(document).ready(function(){
+        getPost('https://mundo.bci.cl/gestion-de-personas/destacados/posts.json','','1','#contNot');
+})
+</script>
+
+
+
+
+
+<!--Este es el que use para traer los Tips de google, tengo que arreglarlo para que funcione bien-->
+<script>
+function getPost(url, category, limit, elem){
+     url = url || '{{site.url}}/files.json';
+     category = category || '';
+     limit = limit || 4;
+     elem = elem || '';
+     var finalURL = url + '?category=' + category + '&limit=' + limit;
+     $.ajax({
+          url: finalURL,
+          cache: true,
+          dataType: 'jsonp',
+          success: function(data){
+               var content = data.files;
+               var contentArr = []
+               $.each(content, function(i, v){
+                    var template = ''
+                    template += '<li>';
+                        template += '<div class="boxLiContainer">';
+                            template += '<a href="'+ v.url +'">';
+                                template += '<div class="iconContainer"> <i class="icon-download-alt"></i> </div>';
+                                template += '<div class="boxLiContent">';
+                                    template += '<h5>'+ v.title +'</h5>';
+                                template += '</div>'
+                            template += '</a>';
+                        template += '</div>';
+                    template += '</li>';
+                    
+                    contentArr.push(template);
+               })
+               $(elem).append(contentArr);
+          },
+          error: function(err){
+               $(elem).append(err);
+          }
+     })
+}
+$(document).ready(function(){
+        getPost('','google-tips-basicos','50','#contFile1');
+        getPost('','google-tips-avanzados','50','#contFile2');
+})
+</script>
+
+
+//este me funcionaba, pero no con el for (es de propiedades)
+
+<!--imagenes-->
+<!--<script>
+function getPost(url, category, limit, elem){
+     url = url || 'https://www.bci.cl/bcipropiedades/products.json';
+     category = category || '';
+     limit = limit || 50;
+     elem = elem || '';
+     var finalURL = url + '?category=' + category + '&limit=' + limit;
+     
+     $.ajax({
+          url: finalURL,
+          cache: true,
+          dataType: 'jsonp',
+          success: function(data){
+               var content = data.products;
+               var contentArr = []
+               $.each(content, function(i, v){
+                    var template = ''
+                        for (var i=0; i < arr.length; i++){
+                            
+                            console.log("i");
+                        }
+                        template += '<div>';
+                            template += '<img src="' + v.covers[0] + '">';
+                        template += '</div>';
+                    contentArr.push(template);
+               });
+               $(elem).append(contentArr);
+          },
+          error: function(err){
+               $(elem).append(err);
+          }
+     })
+}
+$(document).ready(function(){
+        getPost('https://www.bci.cl/bcipropiedades/products.json','','4','#imagenes-json');
+});
+</script>-->
